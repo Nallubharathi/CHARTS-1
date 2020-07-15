@@ -15,14 +15,23 @@ looker.plugins.visualizations.add({
 	  element.innerHTML = `
       <style>
 		.chart-container {
-   		
+
     width: 100%;
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
     white-space: pre;
 	display: block;
-	
+
+}
+.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.sticky + .chart-container {
+  padding-top: 102px;
 }
 
 .table-row {
@@ -32,9 +41,9 @@ looker.plugins.visualizations.add({
 .chart-container {
     white-space: normal !important;
 }
-table, td, th {  
+table, td, th {
   border: 1px solid #ddd;
-  
+
 }
 
 table {
@@ -62,10 +71,10 @@ background-color: #fff;
 	var chartContainer = element.appendChild(document.createElement("div"));
 	chartContainer.className = 'chart-container';
 	chartContainer.id = 'chartContainer';
-	
 
 
-	
+
+
   },
 
   updateAsync: function(data, element, config, queryResponse, details, doneRendering) {
@@ -76,8 +85,8 @@ background-color: #fff;
     console.log('updateAsync() data', data)
     console.log('updateAsync() config', config)
     console.log('updateAsync() queryResponse', queryResponse)
-	
-	
+
+
     Name = config.query_fields.dimensions[0].name;
     date = config.query_fields.measures[0].name;
 	console.log(Name);
@@ -90,24 +99,24 @@ background-color: #fff;
 		var cell = row[queryResponse.fields.dimensions[0].name]
 		xyz = LookerCharts.Utils.htmlForCell(cell);
 		console.log('---inside push method------');
-		
+
         amData.push([
             row[date].value,
 			xyz,
 			 row[score].value,
 			row[total].value
-		]	
+		]
         );
-		
+
     }
-	
+
 	console.log("-------------------------------");
 	console.log('amChart data', amData)
-	
-	
-	
+
+
+
 	function chartChart(response) {
-	
+
 	  response.map((amData, i) => {
 		var neCustomchart = document.createElement('div');
 		neCustomchart.style.height = '80px';
@@ -139,9 +148,9 @@ background-color: #fff;
 		document.getElementById(`graph${i}`).appendChild(neCustomchart)
 	  })
 	}
-	
+
 	function createChartTable(response) {
- 
+
 	  if (response.length !== 0) {
 
 		var headers = ''
@@ -181,17 +190,17 @@ background-color: #fff;
 						<tbody class="tableBody" >
 							${body}
 						</tbody>
-					</table>     
+					</table>
 				</div>
 	`
 
 		chartContainer.innerHTML = view
 		chartChart(response)
-		
+
 	  }
 	}
 
-	
+
 	  console.log("DATA >>>>", JSON.stringify(amData))
 	  if (amData.length > 0) {
 		var reducedDataSource = amData
@@ -199,7 +208,7 @@ background-color: #fff;
 
 		console.log('reducedData >> ', reducedDataSource)
 		console.log(typeof(reducedDataSource));
-		
+
 		console.log('testing inside a function');
 		console.log(Name);
 		reducedDataSource.map((item, index) => {
